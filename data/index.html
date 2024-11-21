@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="t1_logo.jpg" type="image/x-icon" />
+    <!-- Tailwindcss import -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google font import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Tangerine:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Boxicons import -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- Material UI import -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+    />
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <!--  SweetAlert2 import-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <!--  -->
+    <link rel="stylesheet" href="style.css" />
+    <style type="text/tailwindcss">
+      @layer base {
+        h1 {
+          @apply text-3xl;
+        }
+        h2 {
+          @apply text-2xl;
+        }
+        h3 {
+          @apply text-xl;
+        }
+      }
+
+      @layer components {
+        .btn-blue {
+          @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300;
+        }
+      }
+
+      @layer utilities {
+        .filter-none {
+          filter: none;
+        }
+        .filter-grayscale {
+          filter: grayscale(100%);
+        }
+      }
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .box {
+          @apply bg-[#fff] dark:bg-[#242526] border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg hover:scale-[1.01] transition-all duration-200;
+        }
+      }
+    </style>
+    <title>IOT Smart Garden Project</title>
+  </head>
+  <body class="bg-[#f0f2f5] dark:bg-[#18191a] dark:text-gray-300">
+
+    <header
+      id="header"
+      class="bg-red-200 dark:bg-red-900 border-b border-transparent hover:border-gray-300 dark:hover:border-gray-800 hover:shadow-md transition duration-300"
+    >
+      <div class="py-[3px] container flex items-center justify-between">
+        <a href="index.html" title="Go to home" class="block">
+          <img
+            src="T1logo_square.webp"
+            alt="logo"
+            width="70"
+            height="70"
+            class="dark:filter dark:hue-rotate-0 dark:brightness-[500]"
+          />
+        </a>
+        <h1 class="font-bold text-red-600 dark:text-red-100">Trang chủ</h1>
+        <button
+          id="dark_mode_toggle_button"
+          class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+        >
+          <i id="button_icon"></i>
+        </button>
+      </div>
+    </header>
+
+    <main id="page" class="laptop:h-[calc(100vh-81px)] overflow-hidden p-10">
+      <div id="toast"></div>
+      <div class="laptop:grid laptop:grid-cols-5 laptop:grid-rows-5 gap-3 mt-5">
+        <div
+          class="mb-10 border-b border-gray-400 pb-10 laptop:border-0 laptop:mb-0 laptop:pb-0 col-span-4 row-span-1"
+        >
+          <div
+            class="flex flex-col laptop:grid grid-cols-3 gap-5 laptop:h-[200px]"
+          >
+            <div class="rounded-lg p-10 box">
+              <div class="h-full flex items-center justify-between gap-10">
+                <img src="soil.png" alt="soil logo" class="size-[120px]" />
+                <div class="flex items-center justify-between flex-col h-full">
+                  <h2 class="font-semibold uppercase text-center">Độ ẩm đất</h2>
+                  <div
+                    class="h-full flex items-center justify-between gap-5 px-10"
+                  >
+                    <p
+                      id="soilMoisture"
+                      class="text-center text-4xl font-bold text-[#bd6629]"
+                    >
+                      -- %
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-lg p-10 box">
+              <div class="h-full flex items-center justify-between gap-10">
+                <img
+                  src="temperature.png"
+                  alt="soil logo"
+                  class="size-[120px]"
+                />
+                <div class="flex items-center justify-between flex-col h-full">
+                  <h2 class="font-semibold uppercase text-center">Nhiệt độ</h2>
+                  <div
+                    class="h-full flex items-center justify-between gap-5 px-10"
+                  >
+                    <p
+                      id="temperature"
+                      class="text-center text-4xl font-bold text-[#e23342]"
+                    >
+                      -- °C
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-lg p-10 box">
+              <div class="h-full flex items-center justify-between gap-10">
+                <img
+                  id="weather-image"
+                  src="rain.png"
+                  alt="soil logo"
+                  class="size-[120px]"
+                />
+                <div class="flex items-center justify-between flex-col h-full">
+                  <h2 class="font-semibold uppercase text-center">Thời tiết</h2>
+                  <div
+                    class="h-full flex items-center justify-between gap-5 px-10"
+                  >
+                    <p
+                      id="weather"
+                      class="text-center text-4xl font-bold text-blue-600"
+                    >
+                      Mưa
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-5 laptop:mt-0 col-span-1 row-span-1 pb-7 px-10 w-full h-fit rounded-lg box"
+        >
+          <h2
+            id="motor_relay"
+            class="pt-7 pb-2 font-semibold uppercase text-center"
+            data-state="on"
+          >
+            Điều khiển máy bơm
+          </h2>
+          <div class="flex flex-col items-center justify-center gap-5">
+
+            <div class="flex items-center justify-center gap-5">
+              <button
+                data-name="toggle-control"
+                data-relay-name="motor_on-button"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+              >
+                <i id="button_icon">On</i>
+              </button>
+              <button
+                data-name="toggle-control"
+                data-relay-name="motor_off-button"
+                class="mdl-button mdl-js-button mdl-js-ripple-effect"
+              >
+                <i id="button_icon">Off</i>
+              </button>
+            </div>
+            <img
+              src="motor_on.png"
+              alt="motor image"
+              id="motor-image"
+              class="size-[100px]"
+            />
+          </div>
+        </div>
+        <div class="my-20 laptop:my-0 col-span-4 row-span-1">
+          <div class="h-full flex-col flex items-center justify-center">
+            <h1 class="text-4xl uppercase font-semibold tracking-[2px]">
+              Chế độ
+            </h1>
+            <div class="mt-5 segment-control">
+              <input
+                type="radio"
+                id="option1"
+                name="control"
+                value="manual"
+                checked
+              />
+              <label for="option1" class="text-black">Thủ công</label>
+              <input type="radio" id="option2" name="control" value="auto" />
+              <label for="option2" class="text-black">Tự động</label>
+              <input
+                type="radio"
+                id="option3"
+                name="control"
+                value="schedule"
+              />
+              <label for="option3" class="text-black">Lịch trình</label>
+            </div>
+            <p id="currentMode" class="mt-5">Chế độ hiện tại: Thủ công </p>
+            
+            <!-- Add a new paragraph for the date and time below the mode section -->
+            <p id="currentDateTime" class="mt-5 text-gray-700 font-medium"></p>
+          </div>
+        </div>
+        
+        <!-- JavaScript to update the current date and time -->
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            // JavaScript to display the current date and time
+            function formatDateTime(date) {
+              const days = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+              const months = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+              
+              const dayOfWeek = days[date.getDay()];
+              const dayOfMonth = date.getDate();
+              const month = months[date.getMonth()];
+              const year = date.getFullYear();
+              
+              // Get time components (hours, minutes, seconds)
+              const hours = date.getHours().toString().padStart(2, '0');
+              const minutes = date.getMinutes().toString().padStart(2, '0');
+              const seconds = date.getSeconds().toString().padStart(2, '0');
+              
+              return `${dayOfWeek}, ngày ${dayOfMonth} ${month} ${year} Giờ: ${hours}:${minutes}:${seconds}`;
+
+            }
+        
+            // Get the current date and time and update the paragraph content
+            const currentDateTime = new Date();
+            document.getElementById('currentDateTime').textContent = formatDateTime(currentDateTime);
+        
+            // Update every second
+            setInterval(function() {
+              const currentDateTime = new Date();
+              document.getElementById('currentDateTime').textContent = formatDateTime(currentDateTime);
+            }, 1000);
+          });
+        </script>
+        
+        <style>     
+          /* Date and Time styling */
+          #currentDateTime {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            max-width: 300px;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+        
+          /* Add responsiveness */
+          @media (max-width: 768px) {
+            .segment-control {
+              gap: 10px;
+            }
+        
+            #currentDateTime {
+              font-size: 16px;
+              max-width: 300px;
+            }
+          }
+        </style>        
+            
+        <div
+          class="my-5 laptop:my-0 col-span-1 row-span-1 pb-7 px-10 w-full h-fit rounded-lg box"
+        >
+          <h2
+            id="fan_relay"
+            class="pt-7 pb-2 font-semibold uppercase text-center"
+            data-state="on"
+          >
+            Điều khiển quạt
+          </h2>
+          <div class="flex flex-col items-center justify-center gap-5">
+
+            <div class="flex items-center justify-center gap-5">
+              <button
+                data-name="toggle-control"
+                data-relay-name="fan_on-button"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+              >
+                <i id="button_icon">On</i>
+              </button>
+              <button
+                data-name="toggle-control"
+                data-relay-name="fan_off-button"
+                class="mdl-button mdl-js-button mdl-js-ripple-effect"
+              >
+                <i id="button_icon">Off</i>
+              </button>
+            </div>
+            <img
+              src="fan_on.png"
+              alt="fan image"
+              id="fan-image"
+              class="size-[100px]"
+            />
+          </div>
+        </div>
+        <div class="col-span-5 row-span-2">
+          <div class="flex flex-col flex-col-reverse laptop:flex-row gap-5">
+            <div class="laptop:w-[calc(100%-(100%/5))] mt-10 border-t border-gray-400 pt-10 laptop:border-0 laptop:mt-0 laptop:pt-0 laptop:grid grid-cols-3 gap-5">
+              <!-- Pump timer -->
+              <div class="pb-7 px-10 w-full rounded-lg box">
+                <h2 class="py-7 font-semibold uppercase text-center">Hẹn giờ máy bơm</h2>
+                <form class="mx-auto grid grid-cols-2 gap-4" onsubmit="setTimer(event, 'pump')">
+                    <div>
+                        <label for="pump-start-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start time:</label>
+                        <input type="time" id="pump-start-time" class="bg-gray-50 border text-gray-900 text-sm rounded-lg p-2.5" required />
+                    </div>
+                    <div>
+                        <label for="pump-end-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End time:</label>
+                        <input type="time" id="pump-end-time" class="bg-gray-50 border text-gray-900 text-sm rounded-lg p-2.5" required />
+                    </div>
+                    <button type="submit" class="col-span-2 mt-1 mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Lưu</button>
+                </form>
+            </div>
+            
+            
+              <!-- Fan timer -->
+              <div class="pb-7 px-10 w-full rounded-lg box">
+                <h2 class="py-7 font-semibold uppercase text-center">Hẹn giờ quạt</h2>
+                <form class="mx-auto grid grid-cols-2 gap-4" onsubmit="setTimer(event, 'fan')">
+                  <div>
+                    <label for="fan-start-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start time:</label>
+                    <input type="time" id="fan-start-time" class="bg-gray-50 border text-gray-900 text-sm rounded-lg p-2.5" required />
+                  </div>
+                  <div>
+                    <label for="fan-end-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End time:</label>
+                    <input type="time" id="fan-end-time" class="bg-gray-50 border text-gray-900 text-sm rounded-lg p-2.5" required />
+                  </div>
+                  <button type="submit" class="col-span-2 mt-1 mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Lưu</button>
+                </form>
+              </div>
+            
+              <!-- Light timer -->
+              <div class="pb-7 px-10 w-full rounded-lg box">
+                <h2 class="py-7 font-semibold uppercase text-center">Hẹn giờ đèn</h2>
+                <form class="mx-auto grid grid-cols-2 gap-4" onsubmit="setTimer(event, 'light')">
+                  <div>
+                    <label for="light-start-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start time:</label>
+                    <input type="time" id="light-start-time" class="bg-gray-50 border text-gray-900 text-sm rounded-lg p-2.5" required />
+                  </div>
+                  <div>
+                    <label for="light-end-time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End time:</label>
+                    <input type="time" id="light-end-time" class="bg-gray-50 border text-gray-900 text-sm rounded-lg p-2.5" required />
+                  </div>
+                  <button type="submit" class="col-span-2 mt-1 mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Lưu</button>
+                </form>
+              </div>
+            </div>
+            <div
+              class="laptop:w-[calc(100%/5-10px)] pb-7 px-10 h-fit rounded-lg box"
+            >
+              <h2
+                id="lamp_relay"
+                class="pt-7 pb-2 font-semibold uppercase text-center"
+                data-state="on"
+              >
+                Điều khiển đèn
+              </h2>
+              <div class="flex flex-col items-center justify-center gap-5">
+                <div class="flex items-center justify-center gap-5">
+                  <button
+                    data-name="toggle-control"
+                    data-relay-name="lamp_on-button"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                  >
+                    <i id="button_icon">On</i>
+                  </button>
+                  <button
+                    data-name="toggle-control"
+                    data-relay-name="lamp_off-button"
+                    class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                  >
+                    <i id="button_icon">Off</i>
+                  </button>
+                </div>
+                <img
+                  src="lamp_on.png"
+                  alt="lamp image"
+                  id="lamp-image"
+                  class="size-[100px]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          container: {
+            center: true,
+            padding: '1rem',
+            screens: {
+              '2xl': '1400px',
+            },
+          },
+          screens: {
+            mobile: '375px',
+            // => @media (min-width: 375px) { ... }
+
+            tablet: '640px',
+            // => @media (min-width: 640px) { ... }
+
+            laptop: '1024px',
+            // => @media (min-width: 1024px) { ... }
+
+            desktop: '1280px',
+            // => @media (min-width: 1280px) { ... }
+          },
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#da373d',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="services.js"></script>
+    <script src="dark-mode-service.js"></script>
+  </body>
+</html>
